@@ -5,6 +5,7 @@ var cols = 20;
 var board;
 var context;
 var score = 0;
+var highscore = 0;
 
 
 //Snake Head
@@ -24,16 +25,16 @@ var foodY
 var gameOver = false;
 
 
+
 window.onload = function() {
     board = document.getElementById("board");
     board.height = rows * blockSize;
     board.width = cols * blockSize;
     context = board.getContext("2d"); //used for drawing on the board
-    
     placeSnake();
     placeFood();
     document.addEventListener("keydown", changeDirection);
-    //document.getElementById("reset-button").addEventListener("click", resetGame);
+    document.getElementById('high-score').textContent = "High Score: " + localStorage.getItem('highscore');
     //update();
     gameInterval = setInterval(update, 1000/10) //100 milli sec
 }
@@ -88,13 +89,13 @@ function update(){
 }
 
 function placeSnake(){
-    snakeX = Math.floor(Math.random() * cols) * blockSize;
-    snakeY = Math.floor(Math.random() * rows) * blockSize;
+    snakeX = Math.floor(Math.random() * cols) * blockSize - 1;
+    snakeY = Math.floor(Math.random() * rows) * blockSize - 1;
 }
 
 function placeFood(){
-    foodX = Math.floor(Math.random() * cols) * blockSize;
-    foodY = Math.floor(Math.random() * rows) * blockSize;
+    foodX = Math.floor(Math.random() * cols) * blockSize - 1;
+    foodY = Math.floor(Math.random() * rows) * blockSize - 1;
 }
 
 function changeDirection(e){
@@ -127,7 +128,7 @@ function resetGame(){
     board.height = rows * blockSize;
     board.width = cols * blockSize;
     context = board.getContext("2d"); //used for drawing on the board
-    
+    document.getElementById("score-display").textContent = "Score: 0";
     placeSnake();
     placeFood();
     gameInterval = setInterval(update, 1000/10) //100 milli sec
@@ -136,4 +137,8 @@ function resetGame(){
 function updateScore(newScore){
     score = newScore
     document.getElementById("score-display").textContent = "Score: " + score;
+    if(score > localStorage.getItem('highscore')){
+        localStorage.setItem('highscore', score);
+        document.getElementById('high-score').textContent = "High Score: " + score;
+    }
 }
